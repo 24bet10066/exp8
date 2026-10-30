@@ -40,6 +40,12 @@ jobs:
           path: artifacts/
           if-no-files-found: error
           retention-days: 14
+               
+      - name: Deploy to Render
+        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        env:
+          deploy_url: ${{ secrets.RENDER_DEPLOY_HOOK_URL }}
+        run: curl --fail --silent --show-error "$deploy_url"
 
   deploy-model-release:
     name: Publish versioned model release
