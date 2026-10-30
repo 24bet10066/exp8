@@ -24,7 +24,8 @@ def load_model():
     return joblib.load(MODEL_PATH)
 
 
-@app.get("/")
+# Home route
+@app.route("/", methods=["GET"])
 def home():
     """Describe the API and its expected input."""
     return jsonify({
@@ -42,7 +43,15 @@ def home():
     })
 
 
-@app.post("/predict")
+# Health check route
+@app.route("/health", methods=["GET"])
+def health():
+    """Check whether the API is running."""
+    return jsonify({"status": "healthy"}), 200
+
+
+# Prediction route
+@app.route("/predict", methods=["POST"])
 def predict():
     """Validate flower measurements and return a prediction."""
     payload = request.get_json(silent=True)
@@ -88,4 +97,4 @@ def predict():
 
 
 if __name__ == "__main__":
-    app.run(host="127.0.0.1", port=5000, debug=False)
+    app.run(host="0.0.0.0", port=5000, debug=False)
